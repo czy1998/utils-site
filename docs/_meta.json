@@ -1,0 +1,16 @@
+[
+	{
+		"text": "入口",
+		"link": "/guide/",
+		"activeMatch": "/guide/"
+	},
+	{
+		"text": "Hello World",
+		"link": "/hello/",
+		"activeMatch": "/hello/"
+	},
+	{
+		"text": "API",
+		"link": "https://rspress.dev/zh/api/index"
+	}
+]
