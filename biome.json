@@ -11,7 +11,7 @@
   },
   "formatter": {
     "enabled": true,
-    "indentStyle": "tab"
+    "indentStyle": "space"
   },
   "organizeImports": {
     "enabled": true
@@ -19,7 +19,45 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true
+      "recommended": true,
+      "complexity": {
+        "noUselessStringConcat": {
+          "level": "error",
+          "fix": "safe"
+        },
+        "useDateNow": {
+          "level": "info",
+          "fix": "safe"
+        },
+        "useSimplifiedLogicExpression": "info"
+      },
+      "style": {
+        "useTemplate": {
+          "level": "error",
+          "fix": "safe"
+        },
+        "noNegationElse": "error",
+        "noYodaExpression": "info",
+        "useThrowOnlyError": "info"
+      },
+      "correctness": {
+        "noUnusedFunctionParameters": "info",
+        "noUnusedVariables": "info",
+        "useHookAtTopLevel": "info",
+        "noUnusedImports": {
+          "level": "info",
+          "fix": "none"
+        }
+      },
+      "security": {
+        "noDangerouslySetInnerHtmlWithChildren": "error"
+      },
+      "suspicious": {
+        "noConsole": "info",
+        "useAwait": "info",
+        "useErrorMessage": "info",
+        "useNumberToFixedDigitsArgument": "info"
+      }
     }
   },
   "javascript": {

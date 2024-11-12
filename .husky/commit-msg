@@ -1,0 +1,4 @@
+#!/usr/bin/env sh
+
+# dirname -- $0 这一句是通过 shell 指令 dirname 来获取 $0（当前执行的 Shell 脚本的文件名）的目录名
+node "$(dirname -- $0)/../scripts/checkMsg.js" $1
