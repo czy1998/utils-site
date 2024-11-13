@@ -3,9 +3,5 @@
     "text": "入口",
     "link": "/guide/",
     "activeMatch": "/guide/"
-  },
-  {
-    "text": "API",
-    "link": "https://rspress.dev/zh/api/index"
   }
 ]
