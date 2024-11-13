@@ -2,6 +2,7 @@ import * as path from "node:path";
 import { defineConfig } from "rspress/config";
 
 export default defineConfig({
+  base: "/utils-site/", // 使用 github pages 部署，需要加上仓库前缀
   root: path.join(__dirname, "docs"),
   title: "utils-site",
   description: "收集一些常用的方法，留作个人学习使用",
