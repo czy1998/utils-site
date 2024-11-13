@@ -1,0 +1,68 @@
+name: Deploy Rspress site to Pages
+
+on:
+  # 可以将工作流配置为在特定分支或标记上运行
+  push:
+    tags:
+      - v**
+
+  workflow_dispatch:
+
+permissions:
+  # 处理存储库的内容。允许操作列出提交
+  contents: read
+  # 使用 GitHub Pages。允许操作请求 GitHub Pages 生成
+  pages: write
+  # 提取 OpenID Connect (OIDC) 令牌
+  id-token: write
+
+# 以控制工作流运行的并发性
+concurrency:
+  # 指定并发组名称为 pages
+  group: pages
+  # 新触发的工作流不会取消已在运行的工作流，而是等待它完成
+  cancel-in-progress: false
+
+jobs:
+  # Build job
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Not needed if lastUpdated is not enabled
+      - uses: pnpm/action-setup@v3 # pnpm is optional but recommended, you can also use npm / yarn
+        with:
+          version: 8
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Install dependencies
+        run: pnpm install
+      - name: Build with Rspress
+        run: |
+          pnpm run build
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: doc_build
+
+  # Deployment job
+  deploy:
+    # 定义作业引用的环境
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    # 标识运行此作业之前必须成功完成的所有作业
+    needs: build
+    runs-on: ubuntu-latest
+    name: Deploy
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
