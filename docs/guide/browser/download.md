@@ -1,28 +1,73 @@
 # download
 
-### 下载图片
+## 下载
 
 ```ts
-function aDownload(url, fileName) {
-  const a = document.createElement("a");
-  a.target = "_blank";
-  a.rel = "noopener";
-  a.download = fileName;
-  a.setAttribute("download", fileName);
-  // 兼容：某些浏览器不支持HTML5的download属性
-  if (typeof a.download === "undefined") {
-    a.setAttribute("target", "_blank");
-    a.setAttribute("rel", "noopener");
+type DataSource = string | Blob;
+type DownloadFn = (dataSource: DataSource, filename?: string) => void;
+
+/** 图片url转换为base64 */
+const urlToBase64 = (url: string) => {
+  fetch(url)
+    .then((res) => res.blob())
+    .then((blob) => {
+      const reader = new FileReader();
+      reader.onloadend = () => console.log(reader.result); // 输出 Base64
+      reader.readAsDataURL(blob);
+    })
+    .catch((err) => console.error("Error:", err));
+};
+
+/** base64转换为Blob */
+function base64ToBlob(base64: string, mimeType?: string) {
+  const [head, dataStr] = base64.split(",");
+  const type = mimeType || head.match(/(?<=:)([\w/]*)(?=;)/g)?.[0];
+  const byteString = atob(dataStr); // 解码 Base64 字符串，返回 ASCII 字符串
+  // 一个base64字符可以表示为6位2进制，所以下面用 Uint8Array 足够了，一个位置1字节
+  const byteArray = new Uint8Array(byteString.length); // 创建字节数组
+
+  for (let i = 0; i < byteString.length; i++) {
+    byteArray[i] = byteString.charCodeAt(i); // 字符转换为整数
   }
-  a.href = url;
-  a.style.display = "none";
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+
+  return new Blob([byteArray], { type: type || "" }); // 创建 Blob
 }
+
+/** 使用a标签下载 */
+const useATag = (url: string, filename?: string) => {
+  const aTag = document.createElement("a");
+  aTag.style.display = "none";
+  aTag.href = url;
+  if (filename) {
+    aTag.download = filename;
+  }
+  document.body.appendChild(aTag);
+  aTag.click();
+  document.body.removeChild(aTag);
+};
+
+/** 下载方法 */
+const download: DownloadFn = async (dataSource, filename = "") => {
+  if (typeof dataSource === "string") {
+    // 是否是 base64
+    if (data.includes(";base64")) {
+      const blob = base64ToBlob(data);
+      const url = URL.createObjectURL(blob);
+      useATag(url, filename);
+      return;
+    }
+    useATag(dataSource, filename);
+  } else if (dataSource instanceof Blob) {
+    const blob = new Blob([dataSource]);
+    const url = URL.createObjectURL(blob);
+    useATag(url, filename);
+  } else {
+    throw new Error("dataSource must be string or Blob");
+  }
+};
 ```
 
 ::: tip
+在浏览器中，访问图片、pdf 时，会进入预览状态，而不是直接下载
 
-提示
 :::
