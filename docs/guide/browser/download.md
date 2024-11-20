@@ -19,7 +19,7 @@ const urlToBase64 = (url: string) => {
 };
 
 /** base64转换为Blob */
-function base64ToBlob(base64: string, mimeType?: string) {
+const base64ToBlob = (base64: string, mimeType?: string) => {
   const [head, dataStr] = base64.split(",");
   const type = mimeType || head.match(/(?<=:)([\w/]*)(?=;)/g)?.[0];
   const byteString = atob(dataStr); // 解码 Base64 字符串，返回 ASCII 字符串
@@ -31,7 +31,7 @@ function base64ToBlob(base64: string, mimeType?: string) {
   }
 
   return new Blob([byteArray], { type: type || "" }); // 创建 Blob
-}
+};
 
 /** 使用a标签下载 */
 const useATag = (url: string, filename?: string) => {
@@ -49,18 +49,24 @@ const useATag = (url: string, filename?: string) => {
 /** 下载方法 */
 const download: DownloadFn = async (dataSource, filename = "") => {
   if (typeof dataSource === "string") {
+    let blob = null;
+    let name = "";
     // 是否是 base64
-    if (data.includes(";base64")) {
-      const blob = base64ToBlob(data);
-      const url = URL.createObjectURL(blob);
-      useATag(url, filename);
-      return;
+    if (dataSource.includes(";base64")) {
+      blob = base64ToBlob(dataSource);
+    } else {
+      name = (dataSource.match(/(?<=\/)([^\/]+)(?=\.[^/]+$)/g) || [""])[0];
+      const res = await fetch(dataSource);
+      blob = await res.blob();
     }
-    useATag(dataSource, filename);
+    const url = URL.createObjectURL(blob);
+    useATag(url, filename || name);
+    URL.revokeObjectURL(url);
   } else if (dataSource instanceof Blob) {
     const blob = new Blob([dataSource]);
     const url = URL.createObjectURL(blob);
     useATag(url, filename);
+    URL.revokeObjectURL(url);
   } else {
     throw new Error("dataSource must be string or Blob");
   }
