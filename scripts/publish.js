@@ -11,7 +11,7 @@ const packageContent = readFileSync(resolve(__dirname, "../package.json"), {
 const version = JSON.parse(packageContent).version;
 
 exec(
-  `git tag v${version} && git push origin v${version}`,
+  `pnpm build && git tag v${version} && git push origin v${version}`,
   (error, stdout, stderr) => {
     if (error) {
       console.error(`${error}`);
