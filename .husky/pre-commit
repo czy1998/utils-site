@@ -1,3 +1,9 @@
 #!/usr/bin/env sh
 
-pnpm exec lint-staged
+# 获取已修改未暂存的文件列表
+UN_ADD_LIST=$(git status -s | grep '^ M' | awk '{print $2}')
+
+# 获取 package.json 在工作目录与暂存区之间的差异，-U0 变更内容处不需要包括上下文，默认是包括上下各3行的上下文
+PACKAGE_CHANGE=$(git diff -U0 "$(dirname -- $0)/../package.json")
+# 如果参数中有换行符，加上双引号，可以避免参数被解析为单独的元素
+node "$(dirname -- $0)/../scripts/checkVersion.js" "$UN_ADD_LIST" "$PACKAGE_CHANGE" && pnpm exec lint-staged

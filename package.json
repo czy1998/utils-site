@@ -1,13 +1,14 @@
 {
   "name": "utils-site",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "收集一些常用的方法，留作个人学习使用",
   "private": true,
   "scripts": {
     "dev": "rspress dev",
     "build": "rspress build",
     "preview": "rspress preview",
-    "prepare": "husky"
+    "prepare": "husky",
+    "pub": "node ./scripts/publish.js"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,css,less,json}": [

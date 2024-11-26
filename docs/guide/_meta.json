@@ -15,6 +15,13 @@
     "collapsed": true
   },
   {
+    "type": "dir",
+    "label": "hook",
+    "name": "hook",
+    "collapsible": true,
+    "collapsed": true
+  },
+  {
     "type": "custom-link",
     "label": "google",
     "link": "https://www.google.com"
