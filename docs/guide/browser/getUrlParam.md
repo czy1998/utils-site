@@ -7,14 +7,18 @@ type StringObject = {
   [key: string]: string;
 };
 
-/** 获取url上的参数 */
-const getUrlParam = (key?: string): string | StringObject => {
+/** 获取 url/目标url 上的参数 */
+function getUrlParam(key: undefined, targetUrl?: string): StringObject;
+function getUrlParam(key: string, targetUrl?: string): string;
+function getUrlParam(key?: string, targetUrl?: string): string | StringObject {
   if (!key && key !== undefined) {
     throw new Error(
       "获取 Url 参数失败：请传入正确的 key（key 可为空或字符串）"
     );
   }
-  const params = location.href.match(/(?<=\?)([^\/]*)(?=\/)?/g)?.[0];
+  const params = (targetUrl || location.href).match(
+    /(?<=\?)([^\/]*)(?=\/)?/g
+  )?.[0];
   if (!params?.length) {
     return key === undefined ? {} : "";
   }
@@ -30,7 +34,7 @@ const getUrlParam = (key?: string): string | StringObject => {
     return result;
   }
   return result[key] ?? "";
-};
+}
 ```
 
 ### 应用
