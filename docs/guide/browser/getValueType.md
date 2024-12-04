@@ -5,7 +5,8 @@
 ```ts
 const getValueType = (value: any): string => {
   const result = Object.prototype.toString.call(value);
-  const [type] = result.match(/(?<=\[object\s)(\S+)(?=])/g);
+  // const [type] = result.match(/(?<=\[object\s)(\S+)(?=])/g);
+  const type = result.slice(8, -1);
   return type;
 };
 ```
