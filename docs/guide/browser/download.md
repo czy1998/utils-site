@@ -22,8 +22,8 @@ const urlToBase64 = (url: string) => {
 const base64ToBlob = (base64: string, mimeType?: string) => {
   const [head, dataStr] = base64.split(",");
   const type = mimeType || head.match(/(?<=:)([\w/]*)(?=;)/g)?.[0];
-  const byteString = atob(dataStr); // 解码 Base64 字符串，返回 ASCII 字符串
-  // 一个base64字符可以表示为6位2进制，所以下面用 Uint8Array 足够了，一个位置1字节
+  const byteString = atob(dataStr); // 解码 Base64 字符串，返回 2进制 字符串
+  // 2进制字符串每一位大小为都为 1字节，范围在  0–255（十六进制表示为  \x00 到 \xFF）
   const byteArray = new Uint8Array(byteString.length); // 创建字节数组
 
   for (let i = 0; i < byteString.length; i++) {
