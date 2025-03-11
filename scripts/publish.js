@@ -15,8 +15,20 @@ exec(
   (error, stdout, stderr) => {
     if (error) {
       console.error(`${error}`);
+      if (`${error}`.includes("already exists")) {
+        console.log(
+          `提示：当前tag（v${version}）已存在，请从以下几个方面进行检查`,
+        );
+        console.log("1. package.json、CHANGELOG.md 中最新的版本号是否一致");
+        console.log("2. 执行 git tag -l 检查本地已有的 tags");
+        console.log("3. 执行 git ls-remote -t 检查远程仓库已有的 tags");
+      }
       return;
     }
     console.log(`版本发布成功，版本号为: v${version}`);
   },
 );
+function addVersion() {
+  const [p1, p2, p3] = version.split(".");
+  return `${p1}.${p2}.${+p3 + 1}`;
+}
