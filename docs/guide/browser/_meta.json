@@ -1,8 +1,1 @@
-[
-  "download",
-  "limitPromise",
-  "getUrlParam",
-  "setUrlParam",
-  "getValueType",
-  "getEnabledBits"
-]
+["download", "getUrlParam", "setUrlParam"]

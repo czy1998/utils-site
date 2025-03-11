@@ -4,8 +4,12 @@
 
 ```ts
 const getValueType = (value: any): string => {
+  const type = typeof value;
+  if (type !== "object") {
+    return type;
+  }
   const result = Object.prototype.toString.call(value);
-  // const [type] = result.match(/(?<=\[object\s)(\S+)(?=])/g);
+  // Object.prototype.toString.call(obj).replace(/^\[object (\S+)\]$/, "$1");
   const type = result.slice(8, -1);
   return type;
 };
